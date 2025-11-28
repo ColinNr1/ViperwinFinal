@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Viperwin Advent Calendar</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+
+      /* VIPERWIN Christmas Background – replace URL with your final PNG */
+      background:
+        linear-gradient(rgba(0, 0, 45, 0.55), rgba(0, 0, 0, 0.9)),
+        url("VIPERWIN_BACKGROUND_PLACEHOLDER.png")
+          no-repeat center center fixed;
+
+      background-size: cover;
+      background-position: center center;
+
+      color: #fdf4e3;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 20px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(160, 200, 255, 0.12) 0, transparent 55%),
+        radial-gradient(circle at 80% 0, rgba(255, 255, 255, 0.06) 0, transparent 60%),
+        radial-gradient(circle at 10% 70%, rgba(40, 80, 160, 0.22) 0, transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(200, 30, 60, 0.22) 0, transparent 60%);
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .login-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+    }
+
+    .login-box {
+      background: rgba(6, 18, 40, 0.96);
+      border-radius: 18px;
+      padding: 28px 30px 24px;
+      width: 340px;
+      border: 1px solid rgba(190, 215, 255, 0.9);
+      box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.95),
+        0 0 22px rgba(120, 180, 255, 0.75);
+      position: relative;
+    }
+
+    .login-box::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 10% 0, rgba(255, 255, 255, 0.10) 0, transparent 55%),
+        radial-gradient(circle at 90% 0, rgba(200, 220, 255, 0.16) 0, transparent 60%),
+        linear-gradient(180deg, rgba(40, 90, 180, 0.35), transparent 55%, rgba(255, 230, 190, 0.25));
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .login-title {
+      text-align: center;
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      color: #ffe8c6;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .login-sub {
+      text-align: center;
+      font-size: 11px;
+      color: #f7d8b2;
+      margin-bottom: 16px;
+      opacity: 0.95;
+    }
+
+    .login-label {
+      font-size: 13px;
+      color: #f7d8b2;
+      margin-top: 8px;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .login-input {
+      width: 100%;
+      padding: 8px 10px;
+      background: #050d20;
+      border-radius: 8px;
+      border: 1px solid #3f6fd8;
+      color: #ffe9c6;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .login-input:focus {
+      border-color: #f4c66c;
+      box-shadow: 0 0 0 1px rgba(244, 198, 108, 0.5);
+      background: #09142b;
+    }
+
+    .login-btn {
+      margin-top: 18px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: bold;
+      background: linear-gradient(135deg, #f4c66c, #ffeab8);
+      color: #0a0c18;
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.9),
+        0 0 18px rgba(255, 225, 180, 0.7);
+    }
+
+    .login-btn:hover {
+      filter: brightness(1.07);
+      transform: translateY(-1px);
+    }
+
+    .login-error {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #ffb5a5;
+      text-align: center;
+      display: none;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      font-size: 14px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: #f0c673;
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-size: 32px;
+      letter-spacing: 0.06em;
+      color: #ffe9c0;
+      text-shadow: 0 0 14px rgba(0, 0, 0, 0.8);
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #f1d3a5;
+      opacity: 0.95;
+    }
+
+    .settings-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin: 10px 0 4px;
+      flex-wrap: wrap;
+      font-size: 11px;
+    }
+
+    .toggle-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 215, 160, 0.7);
+      background: rgba(5, 15, 32, 0.9);
+      color: #f8e1c5;
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      box-shadow:
+        0 6px 12px rgba(0, 0, 0, 0.6),
+        0 0 10px rgba(255, 210, 150, 0.4);
+    }
+
+    .toggle-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-0.5px);
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .calendar {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .calendar {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .title {
+        font-size: 24px;
+      }
+    }
+
+    .door {
+      position: relative;
+      perspective: 900px;
+      padding: 3px;
+      border-radius: 15px;
+      background:
+        radial-gradient(circle at top, #ffde9a 0%, #1a2858 45%, #050b1b 95%);
+      border: 2px solid rgba(212, 175, 55, 0.9);
+      box-shadow:
+        0 0 0 1px rgba(0, 0, 0, 0.85),
+        0 16px 28px rgba(0, 0, 0, 0.95),
+        0 0 18px rgba(212, 175, 55, 0.5),
+        inset 0 0 8px rgba(212, 175, 55, 0.35);
+      overflow: hidden;
+    }
+
+    .door-special {
+      background:
+        radial-gradient(circle at top, #ffe8b5 0%, #b82030 45%, #4b0710 95%);
+      border: 2px solid rgba(255, 230, 180, 0.95);
+      box-shadow:
+        0 0 0 1px rgba(255, 220, 160, 0.6),
+        0 20px 34px rgba(0, 0, 0, 1),
+        0 0 26px rgba(255, 230, 180, 0.75),
+        inset 0 0 10px rgba(255, 230, 180, 0.45);
+    }
+
+    .door-inner {
+      position: relative;
+      border-radius: 12px;
+      padding: 24px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: linear-gradient(145deg, #10244f, #1f4f9a);
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 0 12px rgba(160, 210, 255, 0.4);
+      border: 2px solid rgba(230, 245, 255, 0.7);
+      transform-origin: left center;
+      transition:
+        transform 0.55s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease,
+        filter 0.2s ease;
+    }
+
+    .door-inner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 0, rgba(255, 255, 255, 0.18) 0, transparent 55%),
+        radial-gradient(circle at 85% 0, rgba(255, 244, 214, 0.18) 0, transparent 60%),
+        linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .door-number {
+      font-size: 26px;
+      font-weight: bold;
+      color: #fff7e0;
+      text-shadow:
+        0 0 10px rgba(0, 0, 0, 0.8),
+        0 0 18px rgba(255, 250, 230, 0.4);
+      position: relative;
+      z-index: 1;
+    }
+
+    .door-inner:hover {
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+        0 0 18px rgba(190, 230, 255, 0.6);
+      background: linear-gradient(145deg, #17326c, #275fb1);
+      filter: brightness(1.05);
+    }
+
+    .door-inner.opened {
+      transform: rotateY(-80deg);
+      box-shadow:
+        inset 0 0 0 1px rgba(0, 0, 0, 0.4),
+        0 18px 26px rgba(0, 0, 0, 0.9);
+    }
+
+    .door.locked .door-inner {
+      cursor: not-allowed;
+      filter: grayscale(0.35) brightness(0.9);
+      opacity: 0.7;
+    }
+
+    .door.locked .door-inner:hover {
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+        0 0 10px rgba(0, 0, 0, 0.7);
+      transform: none;
+      filter: grayscale(0.4) brightness(0.9);
+    }
+
+    .door-inside {
+      position: absolute;
+      inset: 6px;
+      border-radius: 10px;
+      background:
+        radial-gradient(circle at top, #07142c 0%, #02070f 50%, #020304 100%);
+      box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.95),
+        0 0 12px rgba(0, 0, 0, 0.9);
+      z-index: -1;
+    }
+
+    .footer-note {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #f3d9b9;
+      text-align: center;
+      opacity: 0.9;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+
+    .modal {
+      background: radial-gradient(circle at top, #07192f 0%, #02080f 45%, #040707 100%);
+      border-radius: 18px;
+      max-width: 520px;
+      width: 100%;
+      padding: 22px 22px 18px;
+      box-shadow:
+        0 20px 42px rgba(0, 0, 0, 0.98),
+        0 0 24px rgba(140, 195, 255, 0.45);
+      position: relative;
+      border: 1px solid rgba(244, 214, 120, 0.8);
+      color: #f8e8cf;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      color: #ffe9c6;
+      margin-bottom: 4px;
+    }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: #f6d2a0;
+      margin-bottom: 8px;
+      opacity: 0.95;
+    }
+
+    .modal-quote {
+      font-size: 12px;
+      color: #f0c9a5;
+      font-style: italic;
+      margin-bottom: 10px;
+      border-left: 2px solid rgba(255, 215, 160, 0.8);
+      padding-left: 8px;
+    }
+
+    .modal-body {
+      margin-top: 4px;
+      font-size: 13px;
+      color: #f8e8cf;
+      line-height: 1.6;
+    }
+
+    .modal-actions {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .email-btn {
+      border: none;
+      background: linear-gradient(135deg, #f4c66c, #ffeab8);
+      color: #0a0c18;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow:
+        0 8px 18px rgba(0, 0, 0, 0.7),
+        0 0 14px rgba(255, 230, 180, 0.6);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .email-btn:hover {
+      box-shadow:
+        0 12px 24px rgba(0, 0, 0, 0.98),
+        0 0 18px rgba(255, 230, 180, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .close-btn {
+      border: none;
+      background: #193456;
+      color: #f9e1c7;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 7px 13px;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #ffffffdd;
+      font-size: 12px;
+      pointer-events: none;
+      animation: fall linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(110vh); }
+    }
+
+    .admin-toggle {
+      position: fixed;
+      top: 8px;
+      right: 10px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      opacity: 0;
+      z-index: 1100;
+    }
+
+    .admin-toggle-indicator {
+      position: fixed;
+      top: 30px;
+      right: 14px;
+      font-size: 10px;
+      color: #f6d9b7;
+      opacity: 0.85;
+      font-style: italic;
+      display: none;
+      z-index: 1101;
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <h2 class="login-title" id="loginTitle">Viperwin · VIP Login</h2>
+      <p class="login-sub" id="loginSub">
+        Please login with manager code and password.
+      </p>
+
+      <label class="login-label" id="loginLabelUser">Manager code</label>
+      <input id="managerCode" type="text" class="login-input" placeholder="Enter manager code" />
+
+      <label class="login-label" id="loginLabelPass">Password</label>
+      <input id="password" type="password" class="login-input" placeholder="Enter password" />
+
+      <button class="login-btn" id="loginButton" onclick="login()">Login</button>
+
+      <p id="loginError" class="login-error">Invalid login details</p>
+    </div>
+  </div>
+
+  <div id="snow"></div>
+
+  <button class="admin-toggle" id="adminToggle" title="Admin"></button>
+  <div class="admin-toggle-indicator" id="adminIndicator">
+    Testmodus aktiv
+  </div>
+
+  <div class="page" id="calendarPage" style="display:none;">
+    <header class="header">
+      <div class="brand" id="brandText">Viperwin · VIP Advent Calendar</div>
+      <h1 class="title" id="titleText">24 days · 24 exclusive offers</h1>
+      <p class="subtitle" id="subtitleText">
+        From 1 to 24 December, a new door opens every day with a personal VIP offer.
+      </p>
+    </header>
+
+    <div class="settings-bar">
+      <button id="langToggle" class="toggle-btn" style="display:none;"></button>
+    </div>
+
+    <main>
+      <section class="calendar" id="calendar"></section>
+      <p class="footer-note" id="footerNoteText">
+        The wagering requirements, maximum cashback amounts and maximum deposit bonuses depend on the VIP level and will be provided by your manager when you reply to the offer.
+      </p>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal">
+      <h3 class="modal-title" id="modalTitle"></h3>
+      <p class="modal-subtitle" id="modalSubtitle"></p>
+      <p class="modal-quote" id="modalQuote"></p>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions" id="modalActions"></div>
+    </div>
+  </div>
+
+  <script>
+    // Initial language (login UI in English)
+    let userLanguage = "en";
+
+    const calendarEl = document.getElementById("calendar");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSubtitle = document.getElementById("modalSubtitle");
+    const modalQuote = document.getElementById("modalQuote");
+    const modalBody = document.getElementById("modalBody");
+    const modalActions = document.getElementById("modalActions");
+
+    const adminToggle = document.getElementById("adminToggle");
+    const adminIndicator = document.getElementById("adminIndicator");
+
+    const langToggleBtn = document.getElementById("langToggle");
+
+    let testMode = false;
+    const doorEntries = [];
+    const today = new Date();
+    const year = today.getFullYear();
+
+    // active manager (config object)
+    let activeManager = null;
+    let currentManagerCode = null;
+
+    /* ------------------------------------------
+       MANAGER CONFIGURATION
+    -------------------------------------------*/
+    const managerConfig = {
+      "3004": { pw: "6825", lang: "de" },                      // Colin
+      "6825": { pw: "3004", lang: "de" },                      // Andre
+      "3050": { pw: "2264", lang: "it", secondLang: "en" },    // Andrea
+      "2264": { pw: "3050", lang: "es", secondLang: "en" },    // David
+      "1337": { pw: "7356", lang: "de" },                      // Fillippo
+      "1348": { pw: "1337", lang: "fr", secondLang: "en" },    // Geoffrey
+      "3340": { pw: "7491", lang: "es", secondLang: "en" },    // Juan
+      "2338": { pw: "4921", lang: "de" },                      // Lyndon
+      "3335": { pw: "9729", lang: "en" },                      // Matthew
+      "3462": { pw: "6699", lang: "es", secondLang: "en" }     // Yahya
+    };
+
+    /* ---------------- OFFERS DE ---------------- */
+    const offersDe = [
+      {
+        day: 1,
+        title: "Tag 1",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele</p>`,
+        emailText: "20 Freispiele"
+      },
+      {
+        day: 2,
+        title: "Tag 2",
+        quote: "",
+        bodyHtml: `<p>Mission:<br>Setze €500 auf einen beliebigen Slot → Erhalte €50 Bonus</p>`,
+        emailText: "Mission: €500 setzen → €50 Bonus"
+      },
+      {
+        day: 3,
+        title: "Tag 3",
+        quote: "",
+        bodyHtml: `<p>30% Bonus auf deine erste Einzahlung des Tages (bis zu €200)</p>`,
+        emailText: "30% Bonus auf die erste Einzahlung des Tages"
+      },
+      {
+        day: 4,
+        title: "Tag 4",
+        quote: "",
+        bodyHtml: `<p>10% tägliches Cashback auf Nettverluste</p>`,
+        emailText: "10% tägliches Cashback"
+      },
+      {
+        day: 5,
+        title: "Tag 5",
+        quote: "",
+        bodyHtml: `<p>Raffle Day<br>Jede Einzahlung von €20 = 1 Ticket für die Ziehung</p>`,
+        emailText: "Raffle Day: 1 Ticket pro €20 Einzahlung"
+      },
+      {
+        day: 6,
+        title: "Tag 6",
+        quote: "",
+        bodyHtml: `<p>€20 extra Bonus am Nikolaustag</p>`,
+        emailText: "€20 Bonus"
+      },
+      {
+        day: 7,
+        title: "Tag 7",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele für Book of Dead</p>`,
+        emailText: "20 Freispiele für Book of Dead"
+      },
+      {
+        day: 8,
+        title: "Tag 8",
+        quote: "",
+        bodyHtml: `<p>50% Bonus auf deine Einzahlung des Tages</p>`,
+        emailText: "50% Bonus"
+      },
+      {
+        day: 9,
+        title: "Tag 9",
+        quote: "",
+        bodyHtml: `<p>10 Freispiele für Gates of Olympus</p>`,
+        emailText: "10 Freispiele für Gates of Olympus"
+      },
+      {
+        day: 10,
+        title: "Tag 10",
+        quote: "",
+        bodyHtml: `<p>€10 Bonus</p>`,
+        emailText: "€10 Bonus"
+      },
+      {
+        day: 11,
+        title: "Tag 11",
+        quote: "",
+        bodyHtml: `<p>Raffle Day<br>Jede Einzahlung von €20 = 1 Ticket</p>`,
+        emailText: "Raffle Day: 1 Ticket pro €20"
+      },
+      {
+        day: 12,
+        title: "Tag 12",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele für Sweet Bonanza</p>`,
+        emailText: "20 Freispiele für Sweet Bonanza"
+      },
+      {
+        day: 13,
+        title: "Tag 13",
+        quote: "",
+        bodyHtml: `<p>30% Bonus auf die erste Einzahlung des Tages</p>`,
+        emailText: "30% Bonus"
+      },
+      {
+        day: 14,
+        title: "Tag 14",
+        quote: "",
+        bodyHtml: `<p>10% Cashback auf deinen Tag</p>`,
+        emailText: "10% Cashback"
+      },
+      {
+        day: 15,
+        title: "Tag 15",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele für Big Bass Bonanza</p>`,
+        emailText: "20 Freispiele für Big Bass Bonanza"
+      },
+      {
+        day: 16,
+        title: "Tag 16",
+        quote: "",
+        bodyHtml: `<p>€10 Bonus</p>`,
+        emailText: "€10 Bonus"
+      },
+      {
+        day: 17,
+        title: "Tag 17",
+        quote: "",
+        bodyHtml: `<p>10 Freispiele für The Dog House</p>`,
+        emailText: "10 Freispiele für The Dog House"
+      },
+      {
+        day: 18,
+        title: "Tag 18",
+        quote: "",
+        bodyHtml: `<p>50% Bonus auf deine Einzahlung</p>`,
+        emailText: "50% Bonus"
+      },
+      {
+        day: 19,
+        title: "Tag 19",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele für Legacy of Dead</p>`,
+        emailText: "20 Freispiele für Legacy of Dead"
+      },
+      {
+        day: 20,
+        title: "Tag 20",
+        quote: "",
+        bodyHtml: `<p>Raffle Day<br>Jede Einzahlung von €20 = 1 Ticket</p>`,
+        emailText: "Raffle Day: 1 Ticket pro €20"
+      },
+      {
+        day: 21,
+        title: "Tag 21",
+        quote: "",
+        bodyHtml: `<p>€20 Bonus</p>`,
+        emailText: "€20 Bonus"
+      },
+      {
+        day: 22,
+        title: "Tag 22",
+        quote: "",
+        bodyHtml: `<p>20 Freispiele für Gates of Olympus</p>`,
+        emailText: "20 Freispiele für Gates of Olympus"
+      },
+      {
+        day: 23,
+        title: "Tag 23",
+        quote: "",
+        bodyHtml: `<p>30% Bonus auf deine Einzahlung</p>`,
+        emailText: "30% Bonus"
+      },
+      {
+        day: 24,
+        title: "Tag 24",
+        quote: "",
+        bodyHtml: `<p>Weihnachtsbonus:<br>Schicke uns ein Foto im Weihnachtspullover und erhalte einen Bonus von 300€</p>`,
+        emailText: "Foto im Weihnachtspullover : "
+      }
+    ];
+
+    /* ---------------- OFFERS EN ---------------- */
+    const offersEn = [
+      {
+        day: 1,
+        title: "Day 1",
+        quote: "",
+        bodyHtml: `<p>20 Free Spins</p>`,
+        emailText: "20 Free Spins"
+      },
+      {
+        day: 2,
+        title: "Day 2",
+        quote: "",
+        bodyHtml: `<p>Mission:<br>Wager €500 on any slot → Receive €50 bonus</p>`,
+        emailText: "Mission: Wager €500 → Get €50"
+      },
+      {
+        day: 3,
+        title: "Day 3",
+        quote: "",
+        bodyHtml: `<p>30% Bonus on your first deposit today (up to €200)</p>`,
+        emailText: "30% bonus on the first deposit today"
+      },
+      {
+        day: 4,
+        title: "Day 4",
+        quote: "",
+        bodyHtml: `<p>10% Daily Net-Loss Cashback</p>`,
+        emailText: "10% daily cashback"
+      },
+      {
+        day: 5,
+        title: "Day 5",
+        quote: "",
+        bodyHtml: `<p>Raffle Day<br>Every €20 deposit = 1 Ticket</p>`,
+        emailText: "Raffle Day – 1 ticket per €20 deposit"
+      },
+      {
+        day: 6,
+        title: "Day 6",
+        quote: "",
+        bodyHtml: `<p>Cashback Booster<br>All deposits today count 25% extra toward your daily cashback calculation.</p>`,
+        emailText: "Cashback Booster Day"
+      },
+      {
+        day: 7,
+        title: "Day 7",
+        quote: "",
+        bodyHtml: `<p>Double Raffle Tickets<br>Every €20 deposit = 2 tickets today</p>`,
+        emailText: "Double Raffle Tickets Day"
+      },
+      {
+        day: 8,
+        title: "Day 8",
+        quote: "",
+        bodyHtml: `<p>50% Reload Bonus up to €500 on your first deposit of the day</p>`,
+        emailText: "50% reload bonus"
+      },
+      {
+        day: 9,
+        title: "Day 9",
+        quote: "",
+        bodyHtml: `<p>Tiered Deposit Bonus Day:<br>• Deposit €500 – Get €75 Bonus<br>• Deposit €1,000 – Get €200 Bonus<br>• Deposit €2,000 – Get €500 Bonus</p>`,
+        emailText: "Tiered Deposit Bonus Day"
+      },
+      {
+        day: 10,
+        title: "Day 10",
+        quote: "",
+        bodyHtml: `<p>50 Free Spins on any Christmas-themed slot</p>`,
+        emailText: "50 Free Spins"
+      },
+      {
+        day: 11,
+        title: "Day 11",
+        quote: "",
+        bodyHtml: `<p>15% Daily Net-Loss Cashback</p>`,
+        emailText: "15% cashback"
+      },
+      {
+        day: 12,
+        title: "Day 12",
+        quote: "",
+        bodyHtml: `<p>Weekend Tournament Point Campaign<br>Every €50 deposit = +10 Points</p>`,
+        emailText: "Weekend Tournament Point Campaign"
+      },
+      {
+        day: 13,
+        title: "Day 13",
+        quote: "",
+        bodyHtml: `<p>Claim your +5 Points for the Weekend Tournament Campaign</p>`,
+        emailText: "+5 Tournament Points"
+      },
+      {
+        day: 14,
+        title: "Day 14",
+        quote: "",
+        bodyHtml: `<p>10% Insurance on all deposits today</p>`,
+        emailText: "10% Insurance Day"
+      },
+      {
+        day: 15,
+        title: "Day 15",
+        quote: "",
+        bodyHtml: `<p>Two Bonuses Today:<br>• 1st deposit → 30% Bonus<br>• 2nd deposit → 20% Bonus</p>`,
+        emailText: "30% + 20% dual bonus day"
+      },
+      {
+        day: 16,
+        title: "Day 16",
+        quote: "",
+        bodyHtml: `<p>€50 Bonus / Free Bet</p>`,
+        emailText: "€50 Bonus / Free Bet"
+      },
+      {
+        day: 17,
+        title: "Day 17",
+        quote: "",
+        bodyHtml: `<p>Mission:<br>Wager €1000 today → Receive a €100 Bonus</p>`,
+        emailText: "Mission: Wager €1000 → Get €100"
+      },
+      {
+        day: 18,
+        title: "Day 18",
+        quote: "",
+        bodyHtml: `<p>20% Deposit Insurance<br>If today goes negative, you receive a 20% compensation.</p>`,
+        emailText: "20% Deposit Insurance"
+      },
+      {
+        day: 19,
+        title: "Day 19",
+        quote: "",
+        bodyHtml: `<p>Leaderboard Race (Fri–Sun)<br>High-score tournament for cash rewards</p>`,
+        emailText: "Weekend leaderboard race"
+      },
+      {
+        day: 20,
+        title: "Day 20",
+        quote: "",
+        bodyHtml: `<p>Tournament Points x2 Day<br>Everything you play today rewards double points</p>`,
+        emailText: "Tournament Points ×2"
+      },
+      {
+        day: 21,
+        title: "Day 21",
+        quote: "",
+        bodyHtml: `<p>Tournament Points x2 Day<br>Every deposit today counts double for tournament progression</p>`,
+        emailText: "Tournament Points ×2 (Deposits)"
+      },
+      {
+        day: 22,
+        title: "Day 22",
+        quote: "",
+        bodyHtml: `<p>50% Bonus on your second deposit of the day</p>`,
+        emailText: "50% second-deposit bonus"
+      },
+      {
+        day: 23,
+        title: "Day 23",
+        quote: "",
+        bodyHtml: `<p>Deposit at least €200 today and your cashback segment increases by one tier for the entire weekend.</p>`,
+        emailText: "Cashback Tier Upgrade Day"
+      },
+      {
+        day: 24,
+        title: "Day 24",
+        quote: "",
+        bodyHtml: `<p>Send a picture of you wearing a Christmas sweater and receive a bonus of up to 300€!</p>`,
+        emailText: "Christmas Sweater → 300"
+      }
+    ];
+
+    /* ---------------- OFFERS ES ---------------- */
+    const offersEs = [
+      {
+        day: 1,
+        title: "Día 1",
+        quote: "",
+        bodyHtml: `<p>20 Giros Gratis</p>`,
+        emailText: "20 Giros Gratis"
+      },
+      {
+        day: 2,
+        title: "Día 2",
+        quote: "",
+        bodyHtml: `<p>Misión:<br>Apuesta €500 en cualquier slot → Recibe un bono de €50</p>`,
+        emailText: "Misión: apostar €500 → bono €50"
+      },
+      {
+        day: 3,
+        title: "Día 3",
+        quote: "",
+        bodyHtml: `<p>30% de bono en tu primer depósito de hoy (hasta €500)</p>`,
+        emailText: "30% de bono en el primer depósito de hoy"
+      },
+      {
+        day: 4,
+        title: "Día 4",
+        quote: "",
+        bodyHtml: `<p>10% de cashback diario sobre pérdidas netas</p>`,
+        emailText: "10% de cashback diario"
+      },
+      {
+        day: 5,
+        title: "Día 5",
+        quote: "",
+        bodyHtml: `<p>Día de la Rifa<br>Cada depósito de €20 = 1 boleto para el sorteo del fin de semana.<br>Premio acreditado el lunes.</p>`,
+        emailText: "Día de la rifa – 1 boleto por €20"
+      },
+      {
+        day: 6,
+        title: "Día 6",
+        quote: "",
+        bodyHtml: `<p>Cashback Booster<br>Todos los depósitos de hoy cuentan un 25% extra para tu cashback semanal.</p>`,
+        emailText: "Cashback Booster"
+      },
+      {
+        day: 7,
+        title: "Día 7",
+        quote: "",
+        bodyHtml: `<p>Doble de boletos para la rifa<br>Depósito de €20 = 2 boletos</p>`,
+        emailText: "Doble de boletos"
+      },
+      {
+        day: 8,
+        title: "Día 8",
+        quote: "",
+        bodyHtml: `<p>50% de bono de recarga hasta €500 en el primer depósito del día</p>`,
+        emailText: "50% de bono de recarga"
+      },
+      {
+        day: 9,
+        title: "Día 9",
+        quote: "",
+        bodyHtml: `<p>Día de Bono por Depósito Escalonado:<br>• Depósito €50 – Bono básico<br>• Depósito €1.000 – Bono 20%<br>• Depósito €2.000+ – Bono 25%</p>`,
+        emailText: "Bono escalonado por depósito"
+      },
+      {
+        day: 10,
+        title: "Día 10",
+        quote: "",
+        bodyHtml: `<p>50 giros gratis en cualquier slot navideña</p>`,
+        emailText: "50 giros gratis"
+      },
+      {
+        day: 11,
+        title: "Día 11",
+        quote: "",
+        bodyHtml: `<p>15% de cashback diario sobre pérdidas netas</p>`,
+        emailText: "15% de cashback"
+      },
+      {
+        day: 12,
+        title: "Día 12",
+        quote: "",
+        bodyHtml: `<p>Campaña de Puntos del Torneo del Fin de Semana<br>Cada depósito de €50 = +10 puntos</p>`,
+        emailText: "Campaña de puntos del fin de semana"
+      },
+      {
+        day: 13,
+        title: "Día 13",
+        quote: "",
+        bodyHtml: `<p>Reclama tus +5 puntos para la campaña de puntos del fin de semana</p>`,
+        emailText: "+5 puntos de torneo"
+      },
+      {
+        day: 14,
+        title: "Día 14",
+        quote: "",
+        bodyHtml: `<p>10% de seguro en todos los depósitos de hoy</p>`,
+        emailText: "10% de seguro"
+      },
+      {
+        day: 15,
+        title: "Día 15",
+        quote: "",
+        bodyHtml: `<p>Dos Bonos Hoy:<br>• 1º depósito → Bono del 30%<br>• 2º depósito → Bono del 20%</p>`,
+        emailText: "30% + 20% doble bono"
+      },
+      {
+        day: 16,
+        title: "Día 16",
+        quote: "",
+        bodyHtml: `<p>€50 de Bono / Apuesta Gratis</p>`,
+        emailText: "€50 bono / apuesta gratis"
+      },
+      {
+        day: 17,
+        title: "Día 17",
+        quote: "",
+        bodyHtml: `<p>Misión:<br>Apuesta €1000 hoy → Obtén un bono de €100</p>`,
+        emailText: "Misión: apostar €1000 → bono €100"
+      },
+      {
+        day: 18,
+        title: "Día 18",
+        quote: "",
+        bodyHtml: `<p>20% de Seguro sobre el Depósito<br>Si hoy no hay suerte → recibes el 20% mañana</p>`,
+        emailText: "20% de seguro de depósito"
+      },
+      {
+        day: 19,
+        title: "Día 19",
+        quote: "",
+        bodyHtml: `<p>Carrera de Clasificación (Vie–Dom)<br>Torneo de apuesta con premios en efectivo.</p>`,
+        emailText: "Carrera de clasificación del fin de semana"
+      },
+      {
+        day: 20,
+        title: "Día 20",
+        quote: "",
+        bodyHtml: `<p>Día de Puntos de Torneo x2<br>Todo lo que apuestes hoy cuenta doble.</p>`,
+        emailText: "Puntos de torneo ×2"
+      },
+      {
+        day: 21,
+        title: "Día 21",
+        quote: "",
+        bodyHtml: `<p>Día de Puntos de Torneo x2<br>Cada depósito de hoy cuenta doble.</p>`,
+        emailText: "Puntos de torneo ×2 (depósitos)"
+      },
+      {
+        day: 22,
+        title: "Día 22",
+        quote: "",
+        bodyHtml: `<p>50% de bono en el 2º depósito del día, hasta €500</p>`,
+        emailText: "50% en el segundo depósito"
+      },
+      {
+        day: 23,
+        title: "Día 23",
+        quote: "",
+        bodyHtml: `<p>Deposita un mínimo de €200 hoy y tu cashback semanal se triplica para esta semana.</p>`,
+        emailText: "Cashback triplicado"
+      },
+      {
+        day: 24,
+        title: "Día 24",
+        quote: "",
+        bodyHtml: `<p>Envía una foto tuya con un suéter navideño y recibe un Bono Especial de Navidad de hasta €300.</p>`,
+        emailText: "Bono navideño por foto"
+      }
+    ];
+
+    /* ---------------- OFFERS FR ---------------- */
+    const offersFr = [
+      {
+        day: 1,
+        title: "Jour 1",
+        quote: "",
+        bodyHtml: `<p>20 Tours Gratuits</p>`,
+        emailText: "20 tours gratuits"
+      },
+      {
+        day: 2,
+        title: "Jour 2",
+        quote: "",
+        bodyHtml: `<p>Mission :<br>Misez 500 € sur n’importe quelle machine → Recevez un bonus de 50 €</p>`,
+        emailText: "Mission : miser 500 € → bonus 50 €"
+      },
+      {
+        day: 3,
+        title: "Jour 3",
+        quote: "",
+        bodyHtml: `<p>Bonus de 30 % sur votre premier dépôt du jour (jusqu’à 500 €)</p>`,
+        emailText: "Bonus 30 % sur premier dépôt"
+      },
+      {
+        day: 4,
+        title: "Jour 4",
+        quote: "",
+        bodyHtml: `<p>10 % de cashback quotidien sur les pertes nettes</p>`,
+        emailText: "Cashback quotidien 10 %"
+      },
+      {
+        day: 5,
+        title: "Jour 5",
+        quote: "",
+        bodyHtml: `<p>Jour de Tombola<br>Chaque dépôt de 20 € = 1 ticket pour le tirage du week-end.<br>Gain crédité lundi.</p>`,
+        emailText: "Jour de tombola – 1 ticket par 20 €"
+      },
+      {
+        day: 6,
+        title: "Jour 6",
+        quote: "",
+        bodyHtml: `<p>Cashback Booster<br>Tous les dépôts d’aujourd’hui comptent 25 % en plus pour votre cashback hebdomadaire.</p>`,
+        emailText: "Cashback Booster"
+      },
+      {
+        day: 7,
+        title: "Jour 7",
+        quote: "",
+        bodyHtml: `<p>Tickets de Tombola Doubles<br>20 € déposés = 2 tickets</p>`,
+        emailText: "Tickets de tombola doublés"
+      },
+      {
+        day: 8,
+        title: "Jour 8",
+        quote: "",
+        bodyHtml: `<p>Bonus de recharge de 50 % jusqu’à 500 € sur le premier dépôt du jour</p>`,
+        emailText: "Bonus de recharge 50 %"
+      },
+      {
+        day: 9,
+        title: "Jour 9",
+        quote: "",
+        bodyHtml: `<p>Journée Bonus Dépôt Progressif :<br>• Déposez 50 € – Bonus de base<br>• Déposez 1 000 € – Bonus 20 %<br>• Déposez 2 000 €+ – Bonus 25 %</p>`,
+        emailText: "Bonus dépôt progressif"
+      },
+      {
+        day: 10,
+        title: "Jour 10",
+        quote: "",
+        bodyHtml: `<p>50 Tours Gratuits sur n’importe quel slot de Noël</p>`,
+        emailText: "50 tours gratuits"
+      },
+      {
+        day: 11,
+        title: "Jour 11",
+        quote: "",
+        bodyHtml: `<p>15 % de cashback quotidien sur les pertes nettes</p>`,
+        emailText: "Cashback 15 %"
+      },
+      {
+        day: 12,
+        title: "Jour 12",
+        quote: "",
+        bodyHtml: `<p>Campagne de Points du Tournoi du Week-end<br>Chaque dépôt de 50 € = +10 points</p>`,
+        emailText: "Campagne de points du week-end"
+      },
+      {
+        day: 13,
+        title: "Jour 13",
+        quote: "",
+        bodyHtml: `<p>Réclamez vos +5 points pour la campagne du week-end</p>`,
+        emailText: "+5 points de tournoi"
+      },
+      {
+        day: 14,
+        title: "Jour 14",
+        quote: "",
+        bodyHtml: `<p>10 % d’assurance sur tous les dépôts du jour</p>`,
+        emailText: "Assurance 10 %"
+      },
+      {
+        day: 15,
+        title: "Jour 15",
+        quote: "",
+        bodyHtml: `<p>Deux Bonus Aujourd’hui :<br>• 1er dépôt → Bonus 30 %<br>• 2e dépôt → Bonus 20 %</p>`,
+        emailText: "Double bonus 30 % + 20 %"
+      },
+      {
+        day: 16,
+        title: "Jour 16",
+        quote: "",
+        bodyHtml: `<p>Bonus / Pari Gratuit de 50 €</p>`,
+        emailText: "Bonus ou pari gratuit de 50 €"
+      },
+      {
+        day: 17,
+        title: "Jour 17",
+        quote: "",
+        bodyHtml: `<p>Mission :<br>Misez 1 000 € aujourd’hui → Recevez un bonus de 100 €</p>`,
+        emailText: "Mission : miser 1 000 € → bonus 100 €"
+      },
+      {
+        day: 18,
+        title: "Jour 18",
+        quote: "",
+        bodyHtml: `<p>Assurance Dépôt 20 %<br>Si la journée n’est pas favorable → vous récupérez 20 % demain</p>`,
+        emailText: "Assurance dépôt 20 %"
+      },
+      {
+        day: 19,
+        title: "Jour 19",
+        quote: "",
+        bodyHtml: `<p>Course de Classement (Ven–Dim)<br>Tournoi de mise avec récompenses en cash</p>`,
+        emailText: "Course de classement week-end"
+      },
+      {
+        day: 20,
+        title: "Jour 20",
+        quote: "",
+        bodyHtml: `<p>Journée Points de Tournoi x2<br>Toutes les mises comptent double</p>`,
+        emailText: "Points de tournoi ×2"
+      },
+      {
+        day: 21,
+        title: "Jour 21",
+        quote: "",
+        bodyHtml: `<p>Journée Points de Tournoi x2<br>Chaque dépôt compte double dans la progression</p>`,
+        emailText: "Points ×2 (dépôts)"
+      },
+      {
+        day: 22,
+        title: "Jour 22",
+        quote: "",
+        bodyHtml: `<p>Bonus de 50 % sur le 2e dépôt du jour (jusqu’à 500 €)</p>`,
+        emailText: "Bonus 50 % sur le deuxième dépôt"
+      },
+      {
+        day: 23,
+        title: "Jour 23",
+        quote: "",
+        bodyHtml: `<p>Déposez minimum 200 € aujourd’hui et votre cashback hebdomadaire est triplé pour toute la semaine</p>`,
+        emailText: "Cashback hebdomadaire triplé"
+      },
+      {
+        day: 24,
+        title: "Jour 24",
+        quote: "",
+        bodyHtml: `<p>Envoyez une photo de vous avec un pull de Noël et recevez un Bonus Spécial de Noël jusqu’à 300 €</p>`,
+        emailText: "Bonus spécial de Noël"
+      }
+    ];
+
+    /* ---------------- OFFERS IT ---------------- */
+    const offersIt = [
+      {
+        day: 1,
+        title: "Giorno 1",
+        quote: "",
+        bodyHtml: `<p>20 Giri Gratis</p>`,
+        emailText: "20 giri gratis"
+      },
+      {
+        day: 2,
+        title: "Giorno 2",
+        quote: "",
+        bodyHtml: `<p>Missione:<br>Scommetti €500 su qualsiasi slot → Ricevi un Bonus di €50</p>`,
+        emailText: "Missione: scommetti €500 → bonus €50"
+      },
+      {
+        day: 3,
+        title: "Giorno 3",
+        quote: "",
+        bodyHtml: `<p>Bonus del 30% sul tuo primo deposito di oggi (fino a €500)</p>`,
+        emailText: "Bonus 30% sul primo deposito"
+      },
+      {
+        day: 4,
+        title: "Giorno 4",
+        quote: "",
+        bodyHtml: `<p>10% di cashback giornaliero sulle perdite nette</p>`,
+        emailText: "Cashback giornaliero 10%"
+      },
+      {
+        day: 5,
+        title: "Giorno 5",
+        quote: "",
+        bodyHtml: `<p>Giorno della Riffa<br>Ogni deposito di €20 = 1 biglietto per la Grande Estrazione del Weekend<br>Premio accreditato lunedì.</p>`,
+        emailText: "Giorno della riffa – 1 biglietto ogni €20"
+      },
+      {
+        day: 6,
+        title: "Giorno 6",
+        quote: "",
+        bodyHtml: `<p>Cashback Booster<br>Tutti i depositi di oggi valgono il 25% in più per il tuo cashback settimanale.</p>`,
+        emailText: "Cashback Booster"
+      },
+      {
+        day: 7,
+        title: "Giorno 7",
+        quote: "",
+        bodyHtml: `<p>Biglietti della riffa raddoppiati<br>Deposito di €20 = 2 biglietti</p>`,
+        emailText: "Biglietti della riffa raddoppiati"
+      },
+      {
+        day: 8,
+        title: "Giorno 8",
+        quote: "",
+        bodyHtml: `<p>Bonus di ricarica del 50% fino a €500 sul primo deposito della giornata</p>`,
+        emailText: "Bonus ricarica 50%"
+      },
+      {
+        day: 9,
+        title: "Giorno 9",
+        quote: "",
+        bodyHtml: `<p>Giornata Bonus Deposito Progressivo:<br>• Deposita €50 – Bonus base<br>• Deposita €1.000 – Bonus 20%<br>• Deposita €2.000+ – Bonus 25%</p>`,
+        emailText: "Bonus deposito progressivo"
+      },
+      {
+        day: 10,
+        title: "Giorno 10",
+        quote: "",
+        bodyHtml: `<p>50 Giri Gratis su qualsiasi slot natalizia</p>`,
+        emailText: "50 giri gratis"
+      },
+      {
+        day: 11,
+        title: "Giorno 11",
+        quote: "",
+        bodyHtml: `<p>15% di cashback giornaliero sulle perdite nette</p>`,
+        emailText: "Cashback 15%"
+      },
+      {
+        day: 12,
+        title: "Giorno 12",
+        quote: "",
+        bodyHtml: `<p>Campagna Punti Weekend<br>Ogni deposito di €50 = +10 punti</p>`,
+        emailText: "Campagna punti weekend"
+      },
+      {
+        day: 13,
+        title: "Giorno 13",
+        quote: "",
+        bodyHtml: `<p>Ottieni subito +5 punti per la campagna del weekend</p>`,
+        emailText: "+5 punti weekend"
+      },
+      {
+        day: 14,
+        title: "Giorno 14",
+        quote: "",
+        bodyHtml: `<p>10% di assicurazione su tutti i depositi di oggi</p>`,
+        emailText: "Assicurazione 10%"
+      },
+      {
+        day: 15,
+        title: "Giorno 15",
+        quote: "",
+        bodyHtml: `<p>Doppio Bonus Oggi:<br>• 1º deposito → Bonus 30%<br>• 2º deposito → Bonus 20%</p>`,
+        emailText: "Doppio bonus 30% + 20%"
+      },
+      {
+        day: 16,
+        title: "Giorno 16",
+        quote: "",
+        bodyHtml: `<p>Bonus / Scommessa Gratuita da €50</p>`,
+        emailText: "Bonus o scommessa gratuita da €50"
+      },
+      {
+        day: 17,
+        title: "Giorno 17",
+        quote: "",
+        bodyHtml: `<p>Missione:<br>Scommetti €1000 oggi → Ricevi un bonus di €100</p>`,
+        emailText: "Missione: scommetti €1000 → bonus €100"
+      },
+      {
+        day: 18,
+        title: "Giorno 18",
+        quote: "",
+        bodyHtml: `<p>Assicurazione Deposito 20%<br>Se oggi la fortuna non è dalla tua parte → domani ricevi indietro il 20%</p>`,
+        emailText: "Assicurazione deposito 20%"
+      },
+      {
+        day: 19,
+        title: "Giorno 19",
+        quote: "",
+        bodyHtml: `<p>Gara in Classifica (Ven–Dom)<br>Torneo di puntate con premi in denaro</p>`,
+        emailText: "Gara in classifica weekend"
+      },
+      {
+        day: 20,
+        title: "Giorno 20",
+        quote: "",
+        bodyHtml: `<p>Giornata Punti Torneo x2<br>Tutte le puntate di oggi valgono doppio</p>`,
+        emailText: "Punti torneo ×2"
+      },
+      {
+        day: 21,
+        title: "Giorno 21",
+        quote: "",
+        bodyHtml: `<p>Giornata Punti Torneo x2<br>Ogni deposito di oggi vale doppio</p>`,
+        emailText: "Punti ×2 (depositi)"
+      },
+      {
+        day: 22,
+        title: "Giorno 22",
+        quote: "",
+        bodyHtml: `<p>Bonus del 50% sul 2º deposito della giornata (fino a €500)</p>`,
+        emailText: "Bonus 50% sul 2º deposito"
+      },
+      {
+        day: 23,
+        title: "Giorno 23",
+        quote: "",
+        bodyHtml: `<p>Deposita almeno €200 oggi e il tuo cashback settimanale verrà triplicato</p>`,
+        emailText: "Cashback settimanale triplicato"
+      },
+      {
+        day: 24,
+        title: "Giorno 24",
+        quote: "",
+        bodyHtml: `<p>Invia una foto con un maglione di Natale e ricevi un Bonus Speciale fino a €300</p>`,
+        emailText: "Bonus speciale di Natale"
+      }
+    ];
+
+    let offers = offersDe;
+
+    function applyLanguageTexts() {
+      const brand = document.getElementById("brandText");
+      const title = document.getElementById("titleText");
+      const subtitle = document.getElementById("subtitleText");
+      const footer = document.getElementById("footerNoteText");
+      const loginTitle = document.getElementById("loginTitle");
+      const loginSub = document.getElementById("loginSub");
+      const labelUser = document.getElementById("loginLabelUser");
+      const labelPass = document.getElementById("loginLabelPass");
+      const passInput = document.getElementById("password");
+      const codeInput = document.getElementById("managerCode");
+      const btn = document.getElementById("loginButton");
+      const err = document.getElementById("loginError");
+
+      if (userLanguage === "de") {
+        document.documentElement.lang = "de";
+        brand.textContent = "Viperwin · VIP Adventskalender";
+        title.textContent = "24 Tage · 24 exklusive Angebote";
+        subtitle.textContent =
+          "Standard: Türen öffnen sich im Dezember am jeweiligen Kalendertag – wir wünschen ein Frohes Fest!";
+        footer.textContent =
+          "Die Umsatzbedingungen und maximalen Cashback Beträge richten sich nach VIP Level und werden dir von deinem Manager bei Angebotsannahme mitgeteilt.";
+
+        loginTitle.textContent = "Viperwin · VIP Login";
+        loginSub.textContent = "Bitte mit Manager-Code und Passwort einloggen.";
+        labelUser.textContent = "Manager-Code";
+        labelPass.textContent = "Passwort";
+        codeInput.placeholder = "Manager-Code eingeben";
+        passInput.placeholder = "Passwort eingeben";
+        btn.textContent = "Login";
+        err.textContent = "Ungültige Zugangsdaten";
+      } else if (userLanguage === "es") {
+        document.documentElement.lang = "es";
+        brand.textContent = "Viperwin · Calendario VIP de Adviento";
+        title.textContent = "24 días · 24 ofertas exclusivas";
+        subtitle.textContent =
+          "Del 1 al 24 de diciembre se abre cada día una nueva puerta con una oferta VIP personalizada.";
+        footer.textContent =
+          "Las condiciones de apuesta y los límites de cashback dependen del nivel VIP y se comunicarán cuando aceptes la oferta.";
+
+        loginTitle.textContent = "Viperwin · Acceso VIP";
+        loginSub.textContent = "Inicia sesión con tu código de manager y contraseña.";
+        labelUser.textContent = "Código del manager";
+        labelPass.textContent = "Contraseña";
+        codeInput.placeholder = "Introducir código del manager";
+        passInput.placeholder = "Introducir contraseña";
+        btn.textContent = "Acceder";
+        err.textContent = "Datos de acceso inválidos";
+      } else if (userLanguage === "fr") {
+        document.documentElement.lang = "fr";
+        brand.textContent = "Viperwin · Calendrier de l'Avent VIP";
+        title.textContent = "24 jours · 24 offres exclusives";
+        subtitle.textContent =
+          "Du 1er au 24 décembre, une nouvelle porte s'ouvre chaque jour avec une offre VIP personnalisée.";
+        footer.textContent =
+          "Les conditions de mise et les montants maximum de cashback dépendent de votre niveau VIP et seront précisés par votre manager lors de l’activation de l’offre.";
+
+        loginTitle.textContent = "Viperwin · Connexion VIP";
+        loginSub.textContent = "Connectez-vous avec le code manager et le mot de passe.";
+        labelUser.textContent = "Code manager";
+        labelPass.textContent = "Mot de passe";
+        codeInput.placeholder = "Saisir le code manager";
+        passInput.placeholder = "Saisir le mot de passe";
+        btn.textContent = "Connexion";
+        err.textContent = "Identifiants invalides";
+      } else if (userLanguage === "it") {
+        document.documentElement.lang = "it";
+        brand.textContent = "Viperwin · Calendario VIP dell'Avvento";
+        title.textContent = "24 giorni · 24 offerte esclusive";
+        subtitle.textContent =
+          "Dal 1° al 24 dicembre si apre ogni giorno una nuova casella con un'offerta VIP personalizzata.";
+        footer.textContent =
+          "Le condizioni di scommessa e gli importi massimi di cashback dipendono dal livello VIP e saranno comunicati dal tuo manager al momento dell’attivazione dell’offerta.";
+
+        loginTitle.textContent = "Viperwin · Accesso VIP";
+        loginSub.textContent = "Accedi con il codice manager e la password.";
+        labelUser.textContent = "Codice manager";
+        labelPass.textContent = "Password";
+        codeInput.placeholder = "Inserisci il codice manager";
+        passInput.placeholder = "Inserisci la password";
+        btn.textContent = "Accedi";
+        err.textContent = "Dati di accesso non validi";
+      } else {
+        document.documentElement.lang = "en";
+        brand.textContent = "Viperwin · VIP Advent Calendar";
+        title.textContent = "24 days · 24 exclusive offers";
+        subtitle.textContent =
+          "From 1 to 24 December, a new door opens every day with a personal VIP offer.";
+        footer.textContent =
+          "The wagering requirements, maximum cashback amounts and maximum deposit bonuses depend on the VIP level and will be provided by your manager when you reply to the offer.";
+
+        loginTitle.textContent = "Viperwin · VIP Login";
+        loginSub.textContent = "Please log in with manager code and password.";
+        labelUser.textContent = "Manager code";
+        labelPass.textContent = "Password";
+        codeInput.placeholder = "Enter manager code";
+        passInput.placeholder = "Enter password";
+        btn.textContent = "Login";
+        err.textContent = "Invalid login details";
+      }
+    }
+
+    function setOffersForLanguage() {
+      if (userLanguage === "de") offers = offersDe;
+      else if (userLanguage === "es") offers = offersEs;
+      else if (userLanguage === "fr") offers = offersFr;
+      else if (userLanguage === "it") offers = offersIt;
+      else offers = offersEn;
+    }
+
+    function labelLanguage(code) {
+      if (!code) return "";
+      if (code === "de") return "DE";
+      if (code === "es") return "ES";
+      if (code === "fr") return "FR";
+      if (code === "it") return "IT";
+      if (code === "en") return "EN";
+      return code.toUpperCase();
+    }
+
+    function updateLanguageToggle() {
+      if (!activeManager || !activeManager.secondLang) {
+        langToggleBtn.style.display = "none";
+        return;
+      }
+
+      langToggleBtn.style.display = "inline-block";
+
+      const primary = activeManager.lang;
+      const secondary = activeManager.secondLang;
+      const currentLabel = labelLanguage(userLanguage);
+      const otherLabel = labelLanguage(userLanguage === primary ? secondary : primary);
+
+      langToggleBtn.textContent = currentLabel + " / " + otherLabel;
+    }
+
+    langToggleBtn.addEventListener("click", () => {
+      if (!activeManager || !activeManager.secondLang) return;
+      const primary = activeManager.lang;
+      const secondary = activeManager.secondLang;
+
+      userLanguage = (userLanguage === primary) ? secondary : primary;
+
+      applyLanguageTexts();
+      setOffersForLanguage();
+      renderCalendar();
+      updateDoorLockStates();
+      updateLanguageToggle();
+    });
+
+    function login() {
+      const codeRaw = document.getElementById("managerCode").value.trim();
+      const pwInput = document.getElementById("password").value.trim();
+      const err = document.getElementById("loginError");
+
+      if (!codeRaw || !pwInput) {
+        err.style.display = "block";
+        if (userLanguage === "de") {
+          err.textContent = "Bitte alle Felder ausfüllen.";
+        } else if (userLanguage === "es") {
+          err.textContent = "Por favor, completa todos los campos.";
+        } else if (userLanguage === "fr") {
+          err.textContent = "Veuillez remplir tous les champs.";
+        } else if (userLanguage === "it") {
+          err.textContent = "Per favore compila tutti i campi.";
+        } else {
+          err.textContent = "Please fill in all fields.";
+        }
+        return;
+      }
+
+      const config = managerConfig[codeRaw];
+
+      if (!config || pwInput !== config.pw) {
+        err.style.display = "block";
+        if (userLanguage === "de") {
+          err.textContent = "Ungültige Zugangsdaten";
+        } else if (userLanguage === "es") {
+          err.textContent = "Datos de acceso inválidos";
+        } else if (userLanguage === "fr") {
+          err.textContent = "Identifiants invalides";
+        } else if (userLanguage === "it") {
+          err.textContent = "Dati di accesso non validi";
+        } else {
+          err.textContent = "Invalid login details";
+        }
+        return;
+      }
+
+      err.style.display = "none";
+
+      activeManager = config;
+      currentManagerCode = codeRaw;
+      userLanguage = config.lang;
+
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("calendarPage").style.display = "block";
+
+      applyLanguageTexts();
+      setOffersForLanguage();
+      renderCalendar();
+      updateDoorLockStates();
+      createSnow();
+      updateLanguageToggle();
+    }
+
+    function createSnow() {
+      const snowContainer = document.getElementById("snow");
+      snowContainer.innerHTML = "";
+      for (let i = 0; i < 70; i++) {
+        const el = document.createElement("div");
+        el.className = "snowflake";
+        el.textContent = "•";
+        el.style.left = Math.random() * 100 + "vw";
+        el.style.animationDuration = 5 + Math.random() * 7 + "s";
+        el.style.animationDelay = Math.random() * 5 + "s";
+        el.style.fontSize = 8 + Math.random() * 14 + "px";
+        snowContainer.appendChild(el);
+      }
+    }
+
+    function renderCalendar() {
+      calendarEl.innerHTML = "";
+      doorEntries.length = 0;
+
+      offers.forEach((offer) => {
+        const door = document.createElement("article");
+        door.className = "door";
+        if (offer.day === 1 || offer.day === 5 || offer.day === 24) {
+          door.classList.add("door-special");
+        }
+
+        const inner = document.createElement("div");
+        inner.className = "door-inner";
+        inner.innerHTML = `<div class="door-number">${offer.day}</div>`;
+
+        const inside = document.createElement("div");
+        inside.className = "door-inside";
+
+        const liveDate = new Date(year, 11, offer.day); // December
+
+        inner.addEventListener("click", () => {
+          if (door.classList.contains("locked")) return;
+          inner.classList.add("opened");
+          openModal(offer, inner);
+        });
+
+        door.appendChild(inner);
+        door.appendChild(inside);
+        calendarEl.appendChild(door);
+
+        doorEntries.push({ door, inner, liveDate });
+      });
+    }
+
+    function updateDoorLockStates() {
+      doorEntries.forEach(({ door, liveDate }) => {
+        if (testMode) {
+          door.classList.remove("locked");
+        } else {
+          if (today < liveDate) {
+            door.classList.add("locked");
+          } else {
+            door.classList.remove("locked");
+          }
+        }
+      });
+    }
+
+    function adjustCurrency(text) {
+      return text || "";
+    }
+
+    function openModal(offer, innerEl) {
+      modalTitle.textContent = adjustCurrency(offer.title);
+      modalSubtitle.textContent = offer.subtitle || "";
+      modalQuote.textContent = offer.quote || "";
+      modalQuote.style.display = offer.quote ? "block" : "none";
+      modalBody.innerHTML = adjustCurrency(offer.bodyHtml || "");
+
+      let subject, greeting, lineOffer, closing, emailBtnLabel, closeLabel, labelOffer;
+
+      const codeSuffix = currentManagerCode ? " · Code " + currentManagerCode : "";
+
+      if (userLanguage === "es") {
+        subject = "Viperwin – Puerta " + offer.day + " abierta" + codeSuffix;
+        greeting = "Buenos días,";
+        lineOffer = "acabo de abrir la puerta " + offer.day + " en el Calendario de Adviento de Viperwin.";
+        closing = "Por favor, activad esta oferta de Adviento para mi cuenta.\n\nMuchas gracias.";
+        emailBtnLabel = "Enviar oferta por correo";
+        closeLabel = "Cerrar";
+        labelOffer = "Oferta:";
+      } else if (userLanguage === "fr") {
+        subject = "Viperwin – Porte " + offer.day + " ouverte" + codeSuffix;
+        greeting = "Bonjour,";
+        lineOffer = "je viens d'ouvrir la porte " + offer.day + " dans le calendrier de l'Avent Viperwin.";
+        closing = "Merci d'activer cette offre de l'Avent pour mon compte.\n\nMerci beaucoup.";
+        emailBtnLabel = "Envoyer l'offre par e-mail";
+        closeLabel = "Fermer";
+        labelOffer = "Offre :";
+      } else if (userLanguage === "it") {
+        subject = "Viperwin – Casella " + offer.day + " aperta" + codeSuffix;
+        greeting = "Buongiorno,";
+        lineOffer = "ho appena aperto la casella " + offer.day + " nel calendario dell’Avvento di Viperwin.";
+        closing = "Vi prego di attivare questa offerta dell’Avvento per il mio conto.\n\nGrazie mille.";
+        emailBtnLabel = "Invia offerta via e-mail";
+        closeLabel = "Chiudi";
+        labelOffer = "Offerta:";
+      } else if (userLanguage === "en") {
+        subject = "Viperwin – Door " + offer.day + " opened" + codeSuffix;
+        greeting = "Good morning,";
+        lineOffer = "I have just opened door " + offer.day + " in the Viperwin Advent Calendar.";
+        closing = "Please activate this Advent offer for my account.\n\nThank you.";
+        emailBtnLabel = "Send offer by email";
+        closeLabel = "Close";
+        labelOffer = "Offer:";
+      } else {
+        subject = "Viperwin – Tür " + offer.day + " geöffnet" + codeSuffix;
+        greeting = "Guten Morgen,";
+        lineOffer = "ich öffne gerade Tür " + offer.day + " im Viperwin Adventskalender.";
+        closing = "Bitte das Angebot für mich aktivieren.\n\nVielen Dank.";
+        emailBtnLabel = "Angebot per E-Mail senden";
+        closeLabel = "Schließen";
+        labelOffer = "Angebot:";
+      }
+
+      const emailOfferLine = adjustCurrency(offer.emailText || "");
+
+      const bodyText = encodeURIComponent(
+        greeting + "\n\n" +
+        lineOffer + "\n\n" +
+        labelOffer + "\n" + emailOfferLine + "\n\n" +
+        closing
+      );
+
+      const mailtoHref =
+        "mailto:vipteam@viperwin.com?subject=" +
+        encodeURIComponent(subject) +
+        "&body=" +
+        bodyText;
+
+      modalActions.innerHTML = `
+        <a class="email-btn" href="${mailtoHref}">
+          ${emailBtnLabel}
+        </a>
+        <button class="close-btn" type="button" onclick="closeModal()">
+          ${closeLabel}
+        </button>
+      `;
+
+      modalBackdrop.style.display = "flex";
+      modalBackdrop._lastInner = innerEl || null;
+    }
+
+    function closeModal() {
+      modalBackdrop.style.display = "none";
+      if (modalBackdrop._lastInner) {
+        modalBackdrop._lastInner.classList.remove("opened");
+        modalBackdrop._lastInner = null;
+      }
+    }
+
+    modalBackdrop.addEventListener("click", (e) => {
+      if (e.target === modalBackdrop) {
+        closeModal();
+      }
+    });
+
+    adminToggle.addEventListener("click", () => {
+      const pw = prompt("Admin-Passwort eingeben:");
+      if (pw === null) return;
+      if (pw === "676767") {
+        testMode = !testMode;
+        updateDoorLockStates();
+        if (testMode) {
+          adminIndicator.style.display = "block";
+        } else {
+          adminIndicator.style.display = "none";
+        }
+      } else {
+        alert("Falsches Passwort.");
+      }
+    });
+
+    // initial login texts
+    applyLanguageTexts();
+  </script>
+</body>
+</html>
