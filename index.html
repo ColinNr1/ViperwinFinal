@@ -1721,18 +1721,32 @@
     }
 
     function updateDoorLockStates() {
-      doorEntries.forEach(({ door, liveDate }) => {
-        if (testMode) {
-          door.classList.remove("locked");
-        } else {
-          if (today < liveDate) {
-            door.classList.add("locked");
-          } else {
-            door.classList.remove("locked");
-          }
-        }
-      });
+  const now = new Date();
+
+  // aktuelles Datum simulieren / live logisch verwenden
+  const currentDay = now.getDate();
+  const currentMonth = now.getMonth(); // 11 = Dezember
+
+  doorEntries.forEach(({ door, liveDate }) => {
+
+    if (testMode) {
+      // Testmode = alles offen
+      door.classList.remove("locked");
+      return;
     }
+
+    const doorDay = liveDate.getDate();
+    const doorMonth = liveDate.getMonth();
+
+    // Tür öffnet sich nur am jeweiligen Kalendertag
+    if (doorMonth === currentMonth && doorDay === currentDay) {
+      door.classList.remove("locked");
+    } else {
+      door.classList.add("locked");
+    }
+  });
+}
+
 
     function adjustCurrency(text) {
       return text || "";
